@@ -1,0 +1,35 @@
+syntax = "proto3";
+package vention.app.v1;
+
+import "google/protobuf/empty.proto";
+
+
+message TelemetryPayload {
+  repeated double position = 1;
+  string gripper = 2;
+  bool moving = 3;
+  string phase = 4;
+  string error = 5;
+}
+
+message ConfigPayload {
+  repeated double cube_position = 1;
+  repeated double destination = 2;
+  repeated double home_position = 3;
+  double safe_z = 4;
+  double speed = 5;
+}
+
+message CommandPayload {
+  bool success = 1;
+  string message = 2;
+}
+
+service GantryPickPlaceService {
+  rpc get_status (google.protobuf.Empty) returns (TelemetryPayload);
+  rpc set_config (ConfigPayload) returns (CommandPayload);
+  rpc home (google.protobuf.Empty) returns (CommandPayload);
+  rpc start (google.protobuf.Empty) returns (CommandPayload);
+  rpc stop (google.protobuf.Empty) returns (CommandPayload);
+  rpc telemetry (google.protobuf.Empty) returns (stream TelemetryPayload);
+}
